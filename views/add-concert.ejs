@@ -1,0 +1,14 @@
+<h1>Ajouter un Concert</h1>
+<form action="/add-concert" method="POST" enctype="multipart/form-data">
+    <label>Type de concert :</label>
+    <input type="text" name="type" required><br>
+
+    <label>ID Lieu :</label>
+    <input type="number" name="idlieu" required><br>
+
+    <label>Image du concert :</label>
+    <input type="file" name="image" accept="image/*" required><br>
+
+    <button type="submit">Ajouter</button>
+</form>
+<a href="/concerts">Retour</a>

@@ -1,0 +1,10 @@
+<h1>Liste des concerts</h1>
+<ul>
+    <% concerts.forEach(concert => { %>
+        <li>
+            <img src="/<%= concert.image %>" alt="Concert" width="200"><br>
+            <%= concert.type %> - <a href="/reserver/<%= concert.idconcert %>">Réserver</a>
+        </li>
+    <% }) %>
+</ul>
+<a href="/">Retour</a>
