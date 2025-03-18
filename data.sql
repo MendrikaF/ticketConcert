@@ -5,13 +5,14 @@ CREATE TABLE concert (
     idconcert INT AUTO_INCREMENT PRIMARY KEY,
     type VARCHAR(255) NOT NULL,
     idlieu INT NOT NULL
+    date DATETIME NOT NULL,
+    datefin DATETIME NOT NULL
 );
 
 CREATE TABLE lieu (
     idlieu INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(255) NOT NULL,
-    date DATETIME NOT NULL,
-    datefin DATETIME NOT NULL
+    
 );
 
 CREATE TABLE user (
@@ -31,3 +32,8 @@ CREATE TABLE ticket (
 
 ALTER TABLE concert ADD COLUMN image VARCHAR(255) NOT NULL;
 
+UPDATE concert
+SET 
+    date_debut = DATE_ADD(CURDATE(), INTERVAL (RAND() * 365) DAY),  -- Date aléatoire dans l'année à venir
+    date_fin = DATE_ADD(date_debut, INTERVAL (RAND() * 10) DAY)     -- Date de fin dans 10 jours après la date de début
+WHERE idconcert = 2;

@@ -37,11 +37,6 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Middleware
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'));
-app.set('view engine', 'ejs');
-
 // Configuration des sessions
 app.use(session({
     secret: 'secret_key', // Utilise une clé secrète pour signer le cookie de session
@@ -50,11 +45,10 @@ app.use(session({
     cookie: { secure: false } // set to true if using HTTPS
 }));
 
-
-// Routes de base
 app.get('/', (req, res) => {
-    res.render('index'); // Accueil
+    res.render('index', { user: req.session.userEmail }); // Passing userEmail to the view
 });
+
 
 app.get('/concerts', (req, res) => {
     db.query('SELECT * FROM concert', (err, results) => {
@@ -65,11 +59,36 @@ app.get('/concerts', (req, res) => {
 
 app.get('/reserver/:idconcert', (req, res) => {
     const idconcert = req.params.idconcert;
-    db.query('INSERT INTO ticket (idconcert, iduser) VALUES (?, ?)', [idconcert, 1], (err) => {
+    if (!req.session.userId) {
+        return res.send('<h2>Veuillez vous connecter pour réserver un ticket.</h2>');
+    }
+    db.query('INSERT INTO ticket (idconcert, iduser) VALUES (?, ?)', [idconcert, req.session.userId], (err) => {
         if (err) throw err;
-        res.send('<h2>Ticket réservé avec succès !</h2> <a href="/">Retour</a>');
+        res.redirect('/page3');
     });
 });
+
+app.get('/concert-details/:idconcert', (req, res) => {
+    const idconcert = req.params.idconcert;
+    
+    // Requête SQL avec jointure pour récupérer les détails du concert et le nom du lieu
+    db.query(`
+        SELECT concert.*, lieu.nom AS lieu_nom
+        FROM concert
+        JOIN lieu ON concert.idlieu = lieu.idlieu
+        WHERE concert.idconcert = ?`, [idconcert], (err, results) => {
+        if (err) throw err;
+        
+        if (results.length === 0) {
+            return res.send('Concert non trouvé');
+        }
+        
+        const concert = results[0];
+        res.render('concert-details', { concert }); // Passer les détails du concert à la vue
+    });
+});
+
+
 
 // 📌 Route pour afficher le formulaire d'ajout de concert
 app.get('/add-concert', (req, res) => {
@@ -127,7 +146,7 @@ app.post('/login', (req, res) => {
                 // Connexion réussie, créer une session
                 req.session.userId = user.iduser;
                 req.session.userEmail = user.email;
-                res.redirect('/'); // Redirige vers la page d'accueil après la connexion
+                res.redirect('/concerts'); // Redirige vers la page d'accueil après la connexion
             } else {
                 res.send('Mot de passe incorrect');
             }
@@ -151,10 +170,38 @@ app.post('/register', (req, res) => {
         // Insérer l'utilisateur dans la base de données
         db.query('INSERT INTO user (email, mdp, pseudo) VALUES (?, ?, ?)', [email, hashedPassword, pseudo], (err, results) => {
             if (err) throw err;
-            res.send('Utilisateur enregistré avec succès!');
+            res.redirect('/');
         });
     });
 });
+
+app.get('/page3', (req, res) => {
+    res.render('page3'); // Affiche la page 3 avec le compte à rebours et le numéro de ticket
+});
+
+app.get('/page4', (req, res) => {
+    res.render('page4'); // Affiche la page 4 pour choisir le nombre de places
+});
+
+// app.get('/concert-details', (req, res) => {
+//     res.render('concert-details'); // Affiche la page 4 pour choisir le nombre de places
+// });
+
+app.post('/confirm-seats', (req, res) => {
+    const { seats } = req.body;
+    // Traitez ici la réservation des places (par exemple, stockez le nombre de places dans la base de données)
+    res.render('page5', { seats }); // Redirige vers la page 5 avec les détails de la réservation
+});
+
+app.post('/payment', (req, res) => {
+    // Traitez ici le paiement
+    res.redirect('/thank-you');
+});
+
+app.get('/thank-you', (req, res) => {
+    res.send('<h1>Merci pour votre réservation !</h1> </br> <a href="/concerts">voir autre concert</a>');
+});
+
 
 // Lancer le serveur
 const PORT = 3000;

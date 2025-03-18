@@ -7,13 +7,15 @@
 </head>
 <body>
     <h1>Bienvenue sur notre site de réservation de tickets</h1>
+
+<% if (user) { %>  <!-- Si l'utilisateur est connecté -->
+    <p>Bienvenue, <%= user %>!</p>
+    <a href="/logout">Déconnexion</a>
+<% } else { %>  <!-- Si l'utilisateur n'est pas connecté -->
+    <a href="/login">Connexion</a>
+    <a href="/register">S'inscrire</a>
+<% } %>
+
     
-    <% if (session.userId) { %>  <!-- Si l'utilisateur est connecté -->
-        <p>Bienvenue, <%= session.userEmail %>!</p>
-        <a href="/logout">Déconnexion</a>
-    <% } else { %>  <!-- Si l'utilisateur n'est pas connecté -->
-        <a href="/login">Se connecter</a> | 
-        <a href="/register">S'inscrire</a>
-    <% } %>
 </body>
 </html>

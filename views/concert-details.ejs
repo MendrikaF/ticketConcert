@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Détails du concert</h1>
+    <div>
+        <h2><%= concert.type %></h2>
+        <p><strong>Lieu : </strong><%= concert.lieu_nom %></p>
+        <p><strong>Date de début : </strong><%= new Date(concert.date_debut).toLocaleDateString() %></p>
+        <p><strong>Date de fin : </strong><%= new Date(concert.date_fin).toLocaleDateString() %></p>
+        <% if (concert.image) { %>
+            <img src="/<%= concert.image %>" alt="Image du concert" />
+        <% } %>
+    </div>
+<a href="/reserver/<%= concert.idconcert %>"><button>Réserver</button></a>
+<a href="/concerts">Retour à la liste</a>
+
+</body>
+</html>

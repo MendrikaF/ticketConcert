@@ -3,7 +3,7 @@
     <% concerts.forEach(concert => { %>
         <li>
             <img src="/<%= concert.image %>" alt="Concert" width="200"><br>
-            <%= concert.type %> - <a href="/reserver/<%= concert.idconcert %>">Réserver</a>
+            <a href="/concert-details/<%= concert.idconcert %>"><%= concert.type %></a>
         </li>
     <% }) %>
 </ul>
