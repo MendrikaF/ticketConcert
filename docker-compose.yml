@@ -7,10 +7,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: ticket_db
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
     ports:
-      - "3308:3307"
+      - "3308:3306"
     volumes:
       - db_data:/var/lib/mysql
 
