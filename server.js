@@ -16,7 +16,7 @@ app.set('view engine', 'ejs');
 
 // Connexion à MySQL
 const db = mysql.createConnection({
-    host: 'db',
+    host: 'localhost',
     user: 'root',
     password: 'root',
     database: 'ticket_db',
