@@ -20,7 +20,7 @@ const db = mysql.createConnection({
     user: 'root',
     password: 'root',
     database: 'ticket_db',
-    port: 3306
+    port: 3307
 });
 
 db.connect(err => {

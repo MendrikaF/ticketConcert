@@ -15,7 +15,7 @@ services:
     depends_on:
       - db
     environment:
-      DB_HOST: db:3306  # Internal Docker network connection to db service
+      DB_HOST: db:3307  # Internal Docker network connection to db service
       DB_USER: root
       DB_PASSWORD: root
       DB_NAME: ticket_db
